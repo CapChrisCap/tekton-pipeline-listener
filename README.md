@@ -29,6 +29,8 @@ docker run -p 8080:8080 capchriscap/tekton-pipeline-listener
 | ------------ | ----------- | ------------- |
 | PORT         | Port of web server | 8080 |
 | NAMESPACE    | Namespace where tekton pipeline runs are deployed | tekton-pipelines |
+| AUTH_USERNAME    | Username for basic auth user of /logs and /status endpoints | admin |
+| AUTH_PASSWORD    | Password for basic auth user of /logs and /status endpoints | admin |
 
 Example: 
 

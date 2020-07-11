@@ -132,8 +132,8 @@ func getNamespace() string {
 }
 
 func getBasicAccounts() *gin.Accounts {
-	username := os.Getenv("BASIC_USERNAME")
-	password := os.Getenv("BASIC_PASSWORD")
+	username := os.Getenv("AUTH_USERNAME")
+	password := os.Getenv("AUTH_PASSWORD")
 
 	if username == "" {
 		username = "admin"
