@@ -2,4 +2,4 @@
 .vscode
 webserver
 .tmp
-helm*
+helmfile*

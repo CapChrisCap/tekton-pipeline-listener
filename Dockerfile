@@ -10,7 +10,7 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY main.go .
-RUN go build -o webserver main.go
+RUN GOOS=linux GOARCH=386 go build -o webserver main.go
 
 FROM busybox
 COPY --from=cli-builder /go/src/github.com/capchriscap/tekton-cli/bin/tkn /usr/local/bin/tkn
