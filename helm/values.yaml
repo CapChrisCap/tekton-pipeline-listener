@@ -1,0 +1,18 @@
+image: capchriscap/tekton-pipeline-listener:latest
+
+auth:
+  existing_secret: 
+  username: admin
+  password: admin
+
+tekton_pipelines:
+  ns: tekton-pipelines
+
+service:
+  type: NodePort
+  port: 8080
+
+deployment:
+  replicas: 1
+  limits: {}
+  requests: {}

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    environment: {{ .Release.Namespace }}
+spec:
+  replicas: {{ default 1 .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      environment: {{ .Release.Namespace }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        environment: {{ .Release.Namespace }}
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      containers:
+      - image: {{ .Values.image }}
+        name: {{ .Release.Name }}
+        resources:
+          limits:
+            cpu: {{ default "500m" .Values.deployment.limits.cpu }}
+            memory: {{ default "512Mi" .Values.deployment.limits.memory }}
+          requests:
+            cpu: {{ default "100m" .Values.deployment.requests.cpu }}
+            memory: {{ default "256Mi" .Values.deployment.requests.memory }}
+        env:
+        - name: PORT
+          value: {{ .Values.service.port | quote }}
+        - name: NAMESPACE
+          value: {{ .Values.tekton_pipelines.ns }}
+        envFrom:
+          - secretRef:
+              name: {{ if not .Values.existing_secret }}{{ .Release.Name }}{{ else }}{{ .Values.existing_secret }}{{ end }}
+        volumeMounts:
+        - name: secret
+          mountPath: "/etc/secret"
+          readOnly: true
+      volumes:
+      - name: secret
+        secret:
+          secretName: {{ if not .Values.existing_secret }}{{ .Release.Name }}{{ else }}{{ .Values.existing_secret }}{{ end }}

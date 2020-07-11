@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name }}
+    environment: {{ .Release.Namespace}}
+  name: {{ .Release.Name }}
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: {{ .Values.service.port}}
+    protocol: TCP
+  selector:
+    app: {{ .Release.Name }}
+    environment: {{ .Release.Namespace }}
+  type: {{ .Values.service.type}}
