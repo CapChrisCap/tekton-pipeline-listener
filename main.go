@@ -4,12 +4,12 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"log"
 	"os"
 	"os/exec"
 	"regexp"
 
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/common/log"
 )
 
 var VALID_PIPELINE = regexp.MustCompile(`^[a-z0-9-_]+$`)
