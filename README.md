@@ -23,6 +23,66 @@ or via docker
 docker run -p 8080:8080 capchriscap/tekton-pipeline-listener
 ```
 
+## Configuration via Environment Variables
+
+| Env Variable | Description | Default value |
+| ------------ | ----------- | ------------- |
+| PORT         | Port of web server | 8080 |
+| NAMESPACE    | Namespace where tekton pipeline runs are deployed | tekton-pipelines |
+
+Example: 
+
+```bash
+export PORT=3000
+export NS=my-tekton-pipelines
+docker run -p $PORT:$PORT capchriscap/tekton-pipeline-listener -e NAMESPACE=$NS -e PORT=$PORT
+```
+
+## Endpoints
+
+### /health
+
+Used for checking whether service is running and healthy
+
+Example: 
+
+```bash
+curl localhost:8080/health
+```
+
+### /logs/:pipelineRunId
+
+Access logs of pipeline run
+
+> Endpoint is secured via Basic Authentication
+
+Example: 
+
+```bash
+$ curl -N --user admin:admin localhost/logs/service-xyz-run-r68g8
+```
+
+with output
+
+![Tekton Logs](./docs/api-logs-output.png)
+
+will execute internally the Tekton CLI `tkn pipelineruns logs -n tekton-pipelines service-xyz-run-r68g8`.
+
+### /status/:pipelineRunId
+
+Provide final pipeline run status to check whether pipeline was successful or not
+
+> Endpoint is secured via Basic Authentication
+
+Example: 
+
+```bash
+$ curl --user admin:admin localhost/status/service-xyz-run-r68g8
+{"message":"All Tasks have completed executing","reason":"Succeeded","type":"Succeeded","status":"True"}
+```
+
+will use execute internally the Tekton CLI `tkn pipelineruns describe -n tekton-pipelines service-xyz-run-r68g8 -o json`.
+
 ## Example
 
 ```yaml
@@ -94,48 +154,6 @@ spec:
     - name: eventid
       value: $(body.event_id)
   # ...
-```
-
-
-## Endpoints
-
-### /health
-
-Used for checking whether service is running and healthy
-
-Example: 
-
-```bash
-curl localhost:8080/health
-```
-
-### /logs/:pipelineRunId
-
-Access logs of pipeline run
-
-> Endpoint is secured via Basic Authentication
-
-Example: 
-
-```bash
-$ curl -N --user admin:admin localhost/logs/service-xyz-run-r68g8
-```
-
-with output
-
-![Tekton Logs](./docs/api-logs-output.png)
-
-### /status/:pipelineRunId
-
-Provide final pipeline run status to check whether pipeline was successful or not
-
-> Endpoint is secured via Basic Authentication
-
-Example: 
-
-```bash
-$ curl --user admin:admin localhost/status/service-xyz-run-r68g8
-{"message":"All Tasks have completed executing","reason":"Succeeded","type":"Succeeded","status":"True"}
 ```
 
 ## Contributions
