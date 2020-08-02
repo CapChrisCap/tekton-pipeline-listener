@@ -5,7 +5,7 @@ auth:
   username: admin
   password: admin
 
-tekton_pipelines:
+tektonPipelines:
   ns: tekton-pipelines
 
 service:
