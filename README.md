@@ -54,8 +54,8 @@ helm install my-release capchriscap/tekton-pipeline-listener
 | `image`                | Image for service                                                                                                     | `capchriscap/tekton-pipeline-listener:latest` |
 | `auth.username`        | Username for basic auth user of /logs and /status endpoints                                                           | `admin`                                       |
 | `auth.password`        | Password for basic auth user of /logs and /status endpoints                                                           | `admin`                                       |
-| `auth.existing_secret` | Only set if no additional secret should be created. If set, then `auth.username` and `auth.password` will be ignored. | `nil`                                         |
-| `tekton_pipelines.ns`  | Namespace where tekton pipeline runs are deployed                                                                     | `tekton-pipelines`                            |
+| `auth.existingSecret` | Only set if no additional secret should be created. If set, then `auth.username` and `auth.password` will be ignored. | `nil`                                         |
+| `tektonPipelines.ns`  | Namespace where tekton pipeline runs are deployed                                                                     | `tekton-pipelines`                            |
 | `service.type`         | Kubernetes service type                                                                                               | `NodePort`                                    |
 | `service.replicas`     | Number of pods                                                                                                        | `1`                                           |
 | `deployment.requests`  | Kubernetes deployment requests                                                                                        | `{}`                                          |

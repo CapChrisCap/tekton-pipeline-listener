@@ -1,7 +1,7 @@
 image: capchriscap/tekton-pipeline-listener:latest
 
 auth:
-  existing_secret: 
+  existingSecret: 
   username: admin
   password: admin
 

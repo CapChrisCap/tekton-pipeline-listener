@@ -35,10 +35,10 @@ spec:
         - name: PORT
           value: {{ .Values.service.port | quote }}
         - name: NAMESPACE
-          value: {{ .Values.tekton_pipelines.ns }}
+          value: {{ .Values.tektonPipelines.ns }}
         envFrom:
           - secretRef:
-              name: {{ if not .Values.existing_secret }}{{ .Release.Name }}{{ else }}{{ .Values.existing_secret }}{{ end }}
+              name: {{ if not .Values.auth.existingSecret }}{{ .Release.Name }}{{ else }}{{ .Values.auth.existingSecret }}{{ end }}
         volumeMounts:
         - name: secret
           mountPath: "/etc/secret"
@@ -46,4 +46,4 @@ spec:
       volumes:
       - name: secret
         secret:
-          secretName: {{ if not .Values.existing_secret }}{{ .Release.Name }}{{ else }}{{ .Values.existing_secret }}{{ end }}
+          secretName: {{ if not .Values.auth.existingSecret }}{{ .Release.Name }}{{ else }}{{ .Values.auth.existingSecret }}{{ end }}
