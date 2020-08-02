@@ -53,7 +53,7 @@ func logsHandler(c *gin.Context) {
 		return
 	}
 
-	cmd := exec.Command("tkn", "pipelineruns", "logs", "-n", getNamespace(), pipelineRun)
+	cmd := exec.Command("tkn", "pipelineruns", "logs", "-f", "-n", getNamespace(), pipelineRun)
 
 	cmd.Env = append(os.Environ(),
 		"FORCE_COLOR=true",
