@@ -1,7 +1,7 @@
 FROM golang:1.14 as cli-builder
 WORKDIR /go/src/github.com/capchriscap/tekton-cli
 RUN git clone https://github.com/capchriscap/tekton-cli .
-RUN export GO111MODULE=on && make bin/tkn
+RUN export GO111MODULE=on && export GOOS=linux && export GOARCH=386 && make bin/tkn
 
 FROM golang:1.14 as server-builder
 WORKDIR /go/src/github.com/capchriscap/tekton-pipeline-listener
