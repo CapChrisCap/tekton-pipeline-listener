@@ -26,7 +26,12 @@ docker run -p 8080:8080 capchriscap/tekton-pipeline-listener
 or via helm
 
 ```bash
-helm install tekton-pipeline-listener ./helm
+# install repository
+helm repo add capchriscap https://capchriscap.github.io/helm-charts
+helm repo update
+
+# and install the chart
+helm install my-release capchriscap/tekton-pipeline-listener
 ```
 
 ## Configuration
