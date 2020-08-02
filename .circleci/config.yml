@@ -6,6 +6,10 @@ jobs:
       - image: alpine/helm:3.2.4
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "f0:6e:59:91:bc:ff:8a:4a:91:18:d9:1b:0b:19:08:a8"
+            - "a5:28:e0:18:05:1d:9a:3c:08:87:0d:e8:d7:27:e4:f3"
       - run:
           name: helm-github-pages
           environment:
