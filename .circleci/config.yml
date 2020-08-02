@@ -14,4 +14,4 @@ jobs:
             - HELM_CHART: tekton-pipeline-listener
             - HELM_CHART_FOLDER: helm
           entrypoint: sh
-          command: wget -O - https://gist.githubusercontent.com/CapChrisCap/ab86d84f3ff1f98000f6af914bd128fb/raw/4a86f01abfa50fe46c1b8026d8d73b07b32eb151/helm_publish.sh | sh
+          command: wget -O - https://gist.githubusercontent.com/CapChrisCap/ab86d84f3ff1f98000f6af914bd128fb/raw/17c39dd1bd1e2ac3172292a11d3d33b959e710c0/helm_publish.sh | sh
