@@ -43,7 +43,6 @@ helm install my-release capchriscap/tekton-pipeline-listener
 | Env Variable    | Description                                                 | Default value      |
 | --------------- | ----------------------------------------------------------- | ------------------ |
 | `PORT`          | Port of web server                                          | `8080`             |
-| `NAMESPACE`     | Namespace where tekton pipeline runs are deployed           | `tekton-pipelines` |
 | `AUTH_USERNAME` | Username for basic auth user of /logs and /status endpoints | -                  |
 | `AUTH_PASSWORD` | Password for basic auth user of /logs and /status endpoints | -                  |
 
