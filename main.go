@@ -30,8 +30,8 @@ func main() {
 	r.GET("/health", healthHandler)
 
 	r.Use(gin.BasicAuth(*getBasicAccounts()))
-	r.GET("/logs/:pipelineRun", logsHandler)
-	r.GET("/status/:pipelineRun", statusHandler)
+	r.GET("/logs/:namespace/:pipelineRun", logsHandler)
+	r.GET("/status/:namespace/:pipelineRun", statusHandler)
 
 	if err := r.Run(":" + getPort()); err != nil {
 		log.Fatalf("Web server could not start: %s", err.Error())
@@ -45,6 +45,7 @@ func healthHandler(c *gin.Context) {
 }
 
 func logsHandler(c *gin.Context) {
+	namespace := c.Param("namespace")
 	pipelineRun := c.Param("pipelineRun")
 	if !VALID_PIPELINE.MatchString(pipelineRun) {
 		c.JSON(400, gin.H{
@@ -53,7 +54,7 @@ func logsHandler(c *gin.Context) {
 		return
 	}
 
-	cmd := exec.Command("tkn", "pipelineruns", "logs", "-f", "-n", getNamespace(), pipelineRun)
+	cmd := exec.Command("tkn", "pipelineruns", "logs", "-f", "-n", namespace, pipelineRun)
 
 	cmd.Env = append(os.Environ(),
 		"FORCE_COLOR=true",
@@ -65,7 +66,10 @@ func logsHandler(c *gin.Context) {
 
 	go func() {
 		for scanner.Scan() {
-			c.Writer.WriteString(scanner.Text() + "\n")
+			_, scanErr := c.Writer.WriteString(scanner.Text() + "\n")
+			if scanErr != nil {
+				log.Printf("An error while scanning occured: %v", scanErr)
+			}
 		}
 	}()
 	err := cmd.Run()
@@ -77,6 +81,7 @@ func logsHandler(c *gin.Context) {
 }
 
 func statusHandler(c *gin.Context) {
+	namespace := c.Param("namespace")
 	pipelineRun := c.Param("pipelineRun")
 	if !VALID_PIPELINE.MatchString(pipelineRun) {
 		c.JSON(400, gin.H{
@@ -85,7 +90,7 @@ func statusHandler(c *gin.Context) {
 		return
 	}
 
-	cmd := exec.Command("tkn", "pipelineruns", "describe", "-o", "json", "-n", getNamespace(), pipelineRun)
+	cmd := exec.Command("tkn", "pipelineruns", "describe", "-o", "json", "-n", namespace, pipelineRun)
 	cmd.Env = append(os.Environ(), "FORCE_COLOR=true")
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -123,23 +128,15 @@ func getPort() string {
 	return port
 }
 
-func getNamespace() string {
-	ns := os.Getenv("NAMESPACE")
-	if ns == "" {
-		ns = "tekton-pipelines"
-	}
-	return ns
-}
-
 func getBasicAccounts() *gin.Accounts {
 	username := os.Getenv("AUTH_USERNAME")
 	password := os.Getenv("AUTH_PASSWORD")
 
 	if username == "" {
-		username = "admin"
+		log.Fatalf("No AUTH_USERNAME environment variable has been provided for basic authentication")
 	}
 	if password == "" {
-		password = "admin"
+		log.Fatalf("No AUTH_PASSWORD environment variable has been provided for basic authentication")
 	}
 
 	return &gin.Accounts{

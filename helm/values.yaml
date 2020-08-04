@@ -5,9 +5,6 @@ auth:
   username: admin
   password: admin
 
-tektonPipelines:
-  ns: tekton-pipelines
-
 service:
   type: NodePort
   port: 8080

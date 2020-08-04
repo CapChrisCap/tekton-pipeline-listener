@@ -14,13 +14,13 @@ Tekton pipelines have currently the following main challenges:
 Run locally
 
 ```bash
-go run main.go
+AUTH_USERNAME=admin AUTH_PASSWORD=admin go run main.go
 ```
 
 or via docker
 
 ```bash
-docker run -p 8080:8080 capchriscap/tekton-pipeline-listener
+docker run -p 8080:8080 -e AUTH_USERNAME=admin -e AUTH_PASSWORD=admin capchriscap/tekton-pipeline-listener
 ```
 
 or via helm
@@ -44,8 +44,10 @@ helm install my-release capchriscap/tekton-pipeline-listener
 | --------------- | ----------------------------------------------------------- | ------------------ |
 | `PORT`          | Port of web server                                          | `8080`             |
 | `NAMESPACE`     | Namespace where tekton pipeline runs are deployed           | `tekton-pipelines` |
-| `AUTH_USERNAME` | Username for basic auth user of /logs and /status endpoints | `admin`            |
-| `AUTH_PASSWORD` | Password for basic auth user of /logs and /status endpoints | `admin`            |
+| `AUTH_USERNAME` | Username for basic auth user of /logs and /status endpoints | -                  |
+| `AUTH_PASSWORD` | Password for basic auth user of /logs and /status endpoints | -                  |
+
+> Note: if `AUTH_USERNAME` or `AUTH_PASSWORD` is not set or empty, the programm will exit with an error
 
 ### Helm
 
@@ -55,7 +57,6 @@ helm install my-release capchriscap/tekton-pipeline-listener
 | `auth.username`        | Username for basic auth user of /logs and /status endpoints                                                           | `admin`                                       |
 | `auth.password`        | Password for basic auth user of /logs and /status endpoints                                                           | `admin`                                       |
 | `auth.existingSecret` | Only set if no additional secret should be created. If set, then `auth.username` and `auth.password` will be ignored. | `nil`                                         |
-| `tektonPipelines.ns`  | Namespace where tekton pipeline runs are deployed                                                                     | `tekton-pipelines`                            |
 | `service.type`         | Kubernetes service type                                                                                               | `NodePort`                                    |
 | `service.replicas`     | Number of pods                                                                                                        | `1`                                           |
 | `deployment.requests`  | Kubernetes deployment requests                                                                                        | `{}`                                          |
@@ -73,7 +74,7 @@ Example:
 curl localhost:8080/health
 ```
 
-### /logs/:pipelineRunId
+### /logs/:namespace/:pipelineRunId
 
 Access logs of pipeline run
 
@@ -82,7 +83,7 @@ Access logs of pipeline run
 Example:
 
 ```bash
-$ curl -N --user admin:admin localhost/logs/service-xyz-run-r68g8
+$ curl -N --user admin:admin localhost/logs/tekton-pipelines/service-xyz-run-r68g8
 ```
 
 with output
@@ -91,7 +92,7 @@ with output
 
 will execute internally the Tekton CLI `tkn pipelineruns logs -n tekton-pipelines service-xyz-run-r68g8`.
 
-### /status/:pipelineRunId
+### /status/:namespace/:pipelineRunId
 
 Provide final pipeline run status to check whether pipeline was successful or not
 
@@ -100,7 +101,7 @@ Provide final pipeline run status to check whether pipeline was successful or no
 Example:
 
 ```bash
-$ curl --user admin:admin localhost/status/service-xyz-run-r68g8
+$ curl --user admin:admin localhost/status/tekton-pipelines/service-xyz-run-r68g8
 {"message":"All Tasks have completed executing","reason":"Succeeded","type":"Succeeded","status":"True"}
 ```
 
