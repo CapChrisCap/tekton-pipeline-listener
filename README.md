@@ -60,6 +60,7 @@ helm install my-release capchriscap/tekton-pipeline-listener
 | `service.replicas`     | Number of pods                                                                                                        | `1`                                           |
 | `deployment.requests`  | Kubernetes deployment requests                                                                                        | `{}`                                          |
 | `deployment.limits`    | Kubernetes deployment limits                                                                                          | `{}`                                          |
+| `annotations`          | Kubernetes deployment annotations                                                                                     | `{}`                                          |
 
 ## Endpoints
 
