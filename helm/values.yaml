@@ -13,3 +13,5 @@ deployment:
   replicas: 1
   limits: {}
   requests: {}
+
+annotations: {}
