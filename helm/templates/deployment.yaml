@@ -6,6 +6,10 @@ metadata:
   labels:
     app: {{ .Release.Name }}
     environment: {{ .Release.Namespace }}
+{{- with .Values.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
   replicas: {{ default 1 .Values.deployment.replicas }}
   selector:
